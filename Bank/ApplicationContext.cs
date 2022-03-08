@@ -19,7 +19,7 @@ namespace Bank
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
              : base(options)
         {
-           // Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -27,46 +27,45 @@ namespace Bank
             optionsBuilder.UseSqlServer(@"Server=localhost\SQLEXPRESS;Database=BankDB;Trusted_Connection=True;");
         }
 
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    base.OnModelCreating(modelBuilder);
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
 
-        //    modelBuilder.Entity<TCredits>(entity =>
-        //    {
-        //        entity.HasKey(e => e.IDCredit);
-        //        entity.Property(e => e.IDCredit).ValueGeneratedOnAdd();
-        //        entity.ToTable("TCredits");
-        //    });
+            modelBuilder.Entity<TCredits>(entity =>
+            {
+                entity.HasKey(e => e.IDCredit);
+                entity.Property(e => e.IDCredit).ValueGeneratedOnAdd();
+                entity.ToTable("TCredits");
+            });
 
-        //    modelBuilder.Entity<TDeposits>(entity =>
-        //    {
-        //        entity.HasKey(e => e.IDDeposit);
-        //        entity.Property(e => e.IDDeposit).ValueGeneratedOnAdd();
-        //        entity.ToTable("TDeposits");
-        //    });
+            modelBuilder.Entity<TDeposits>(entity =>
+            {
+                entity.HasKey(e => e.IDDeposit);
+                entity.Property(e => e.IDDeposit).ValueGeneratedOnAdd();
+                entity.ToTable("TDeposits");
+            });
 
-        //    modelBuilder.Entity<TClients>(entity =>
-        //    {
-        //        entity.HasKey(e => e.IDClient);
-        //        entity.Property(e => e.IDClient).ValueGeneratedOnAdd();
-        //        entity.ToTable("TClients");
-        //    });
-
-
-        //    modelBuilder.Entity<TClients>()
-        //        .HasKey(entity => entity.IDClient);
-
-        //    modelBuilder.Entity<TClients>()
-        //        .HasOne(record => record.Credit)
-        //        .WithMany(enti => enti.CreditTClients)
-        //        .HasForeignKey(record => record.CreditId);
-
-        //    modelBuilder.Entity<TClients>()
-        //        .HasOne(a => a.Deposit)
-        //        .WithMany(b => b.DepositsTClients)
-        //        .HasForeignKey(c => c.DepositId);
+            modelBuilder.Entity<TClients>(entity =>
+            {
+                entity.HasKey(e => e.IDClient);
+                entity.Property(e => e.IDClient).ValueGeneratedOnAdd();
+                entity.ToTable("TClients");
+            });
 
 
-        //}
+            //modelBuilder.Entity<TClients>()
+            //    .HasKey(entity => entity.IDClient);
+
+            modelBuilder.Entity<TClients>()
+                //.HasOne(record => record)
+                .HasMany(enti => enti.Credits)
+                .WithOne();
+
+            modelBuilder.Entity<TClients>()
+                .HasMany(enti => enti.Deposits)
+                .WithOne();
+
+
+        }
     }
 }

@@ -33,43 +33,44 @@ namespace Bank
         }
         private void button1_Click(object sender, EventArgs e)
         {
-           // try
-           // {
+            try
+            {
                 using (db = new ApplicationContext(UseSQLServerString()))
                 {
 
                     MessageBox.Show("Connected good!1");
-                    TCredits creditDTO = new TCredits
-                    {
-                        AmoutCredit = 55,
-                        MyDate = dateTimePicker1.Value
-                    };
+
+                TClients clientDTO = new TClients
+                {
+                    Surname = "Кім"
+                    //CreditId = creditDTO.IDCredit
+                    //MyDate = dateTimePicker1.Value
+                };
+                db.Clients.Add(clientDTO);
+                db.SaveChanges();
+                TCredits creditDTO = new TCredits
+                {
+                    AmoutCredit = 55,
+                    MyDate = dateTimePicker1.Value
+                    // = clientDTO.IDClient
+                };
                 db.Credits.Add(creditDTO);
                 db.SaveChanges();
-                TClients clientDTO = new TClients
-                    {
-                        Surname = "Кім",
-                        CreditId = creditDTO.IDCredit
-                        //MyDate = dateTimePicker1.Value
-                    };
-                    db.Clients.Add(clientDTO);
-                    db.SaveChanges();
+                MessageBox.Show("Connected good!");
+                var result = db.Credits.Include(x => x.IDCredit).FirstOrDefault();
 
-                    MessageBox.Show("Connected good!");
-                    var result = db.Clients.Include(x => x.Credit).FirstOrDefault();
+                textBox1.Text = result.MyDate.ToString();
+                MessageBox.Show("Connected good!1");
 
-                    textBox1.Text = result.Credit.MyDate.ToString();
-                    MessageBox.Show("Connected good!1");
-
-                   // textBox1.Text = result.ToString();
+                // textBox1.Text = result.ToString();
 
 
-                }
-           // }
-           // catch (Exception ex)
-           // {
-           //     MessageBox.Show(ex.Message.ToString());
-           // }
+            }
         }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message.ToString());
+            }
+}
     }
 }
